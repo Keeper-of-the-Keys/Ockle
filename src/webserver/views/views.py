@@ -385,7 +385,10 @@ def _servers_obj_add_list_view(request,obj,objDict,objGenerator):
     serverName = request.matchdict['serverName']
     
     for key in objDict.keys():
-        objDict[key] = str(objDict[key][objGenerator]["comment"])
+        try:
+            objDict[key] = str(objDict[key][objGenerator]["comment"])
+        except:
+            objDict[key] = 'key_error'
 
     return {"layout": site_layout(),
             "config_sidebar_head" : config_sidebar_head(),
