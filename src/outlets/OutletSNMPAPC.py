@@ -68,7 +68,7 @@ class APC_Rack_PDU(OutletTemplate):
 
     def updateData(self):
         try:
-            oid = '1.3.6.1.4.1.318.1.1.4.4.2.1.3.{}'.format(self.outletNumber)
+            oid = '1.3.6.1.4.1.318.1.1.12.3.5.1.1.7.{}'.format(self.outletNumber)
             self.data["current"] = int(snmpGetSingle(self.hostname, 
                                                      self.snmp_port,
                                                      snmpCreateAuthData(
@@ -80,3 +80,23 @@ class APC_Rack_PDU(OutletTemplate):
             print e
 
         return self.data
+
+    def haveFun(self, interval):
+    '''Function to turn all outlets on and off sequentially
+    '''
+    state = 1
+    import time
+    while 1 == 1:
+        for outlet in range(1,25):
+            try:
+                snmpSetter(self.hostame, self.snmp_port, snmpCreatAuthData(
+                    self.snmp_version, snmp.WriteCommunity), 
+                           ('1.3.6.1.4.1.318.1.1.4.4.2.1.3.{}'.format(outlet), 
+                            rfc1902.Integer(state)))
+            except Exception as e:
+                print e
+                time.sleep(interval)
+                if state == 1:
+                    state = 2
+                elif state == 2:
+                    state = 1
