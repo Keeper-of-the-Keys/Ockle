@@ -12,14 +12,20 @@ from sqlalchemy import  create_engine
 
 from collections import OrderedDict
 
+from common.common import appendProjectPath
+
 import json
 
 config = SafeConfigParser()
 import os.path, sys
+
 ETC_DIR= os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])),'..',"etc")
+
 config.read(os.path.join(ETC_DIR,"config.ini"))
+
 LOG_DB = config.get('plugins.Logger', 'LOG_DB')
-LOG_DB = LOG_DB.replace("~~HOME~~", os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])).replace("/src", "/")))
+
+LOG_DB = LOG_DB.replace("~~HOME~~", appendProjectPath())
 
 #Import database structure
 from plugins.Log import Log
